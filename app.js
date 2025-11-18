@@ -13,7 +13,8 @@
      spaces updated in DB and re-fetched so changes persist after refresh.
 */
 
-const BACKEND_BASE = 'http://localhost:8080'; // <<-- set this to your running backend address
+const BACKEND_BASE = 'http://afterschoollessons-env.eba-hzm2bmsq.ap-south-1.elasticbeanstalk.com'; // <<-- set this to your running backend address
+//const BACKEND_BASE = 'http://localhost:8080';
 
 // Build API path WITHOUT any student id (coursework mandates no student-id path here)
 function apiPath(path) {

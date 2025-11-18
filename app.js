@@ -16,7 +16,7 @@
 const BACKEND_BASE = 'http://afterschoollessons-env.eba-hzm2bmsq.ap-south-1.elasticbeanstalk.com'; // <<-- set this to your running backend address
 //const BACKEND_BASE = 'http://localhost:8080';
 
-// Build API path WITHOUT any student id (coursework mandates no student-id path here)
+// Build API path 
 function apiPath(path) {
   const base = BACKEND_BASE ? BACKEND_BASE.replace(/\/$/, '') : '';
   return `${base}${path}`;

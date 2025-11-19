@@ -1,13 +1,15 @@
-/* app.js - Coursework-compliant Vue 2 frontend 
-   - Vue 2 
+/* app.js - Coursework-compliant Vue 2 frontend (complete file)
+   - Vue 2 (Options API)
    - Uses fetch() promises only (no axios / no XHR)
    - Backend endpoints used:
        GET  /lessons
        GET  /search?q=...
        POST /orders
        PUT  /lessons/:id
-       */
-const BACKEND_BASE = 'http://localhost:3000';
+   */
+
+const BACKEND_BASE = 'http://schooltest-env.eba-kjdsk8eq.ap-south-1.elasticbeanstalk.com'; // <<-- set this to your running backend address
+
 
 // Build API path 
 function apiPath(path) {

@@ -1,21 +1,13 @@
-/* app.js - Coursework-compliant Vue 2 frontend (complete file)
-   - Vue 2 (Options API)
+/* app.js - Coursework-compliant Vue 2 frontend 
+   - Vue 2 
    - Uses fetch() promises only (no axios / no XHR)
    - Backend endpoints used:
        GET  /lessons
        GET  /search?q=...
        POST /orders
        PUT  /lessons/:id
-   - IMPORTANT: set BACKEND_BASE to your backend (e.g. 'http://localhost:8080')
-   - Uses numeric `id` (preferred) but supports MongoDB _id if id missing
-   - No localStorage (backend is authoritative). Cart stored only in Vue memory.
-   - Fixes: reactive search, single-order submission (no duplicates), confirmation message,
-     spaces updated in DB and re-fetched so changes persist after refresh.
-*/
-
-//const BACKEND_BASE = 'http://afterschool-env.eba-miumtgxg.ap-south-1.elasticbeanstalk.com'; // <<-- set this to your running backend address
+       */
 const BACKEND_BASE = 'http://localhost:3000';
-
 
 // Build API path 
 function apiPath(path) {
@@ -28,7 +20,7 @@ new Vue({
 
   data() {
     return {
-      // Embedded fallback lessons (>=10) - replaced by GET /lessons on mount if backend available
+      //Hard Coded fallback lessons (>=10) - replaced by GET /lessons if backend available
       lessons: [
         { id: 1, subject: 'Math',    location: 'Hendon',     price: 100, spaces: 5, icon: 'fa-solid fa-calculator' },
         { id: 2, subject: 'English', location: 'Colindale',  price: 80,  spaces: 5, icon: 'fa-solid fa-book' },
@@ -60,7 +52,7 @@ new Vue({
       orderError: '',
       submittingOrder: false, // prevents duplicate POSTs
 
-      // choose backend search approach (Approach B): call /search on input
+      // choose backend search approach 
       backendSearchEnabled: true,
 
       // small debounce timer id to avoid overwhelming server on very fast typing
@@ -127,7 +119,7 @@ new Vue({
       // schedule new request
       this._searchDebounceId = setTimeout(() => {
         if (!this.backendSearchEnabled) {
-          // If backend search disabled, keep embedded filtering (not used here)
+         
           return;
         }
 
@@ -147,7 +139,6 @@ new Vue({
 
             // Map backend docs to frontend shape, prefer numeric `id` if present
             this.lessons = data.map(d => ({
-              // Prefer numeric id if present (coursework requires numeric id), else use _id string
               id: (d.hasOwnProperty('id') && !isNaN(Number(d.id))) ? Number(d.id) : (d._id ? d._id : null),
               subject: d.subject || d.topic || '',
               location: d.location || '',
@@ -185,7 +176,7 @@ new Vue({
       }
     },
 
-    // Remove entire cartItem from cart and restore spaces in lessons (client-side)
+    // Remove entire cartItem from cart and restore spaces in lessons front end
     removeFromCart(cartItem) {
       const lesson = this.lessons.find(l => String(l.id) === String(cartItem.id));
       if (lesson) {
@@ -207,7 +198,7 @@ new Vue({
     },
 
     // Submit order (prevents duplicates by disabling while submitting)
-    // Payload format strictly as coursework: { name, phone, lessonIDs, numberOfSpace }
+    // Payload format:{ name, phone, lessonIDs, numberOfSpace }
     submitOrder() {
       // prevent duplicate submits
       if (this.submittingOrder) return;
@@ -222,7 +213,7 @@ new Vue({
         return;
       }
 
-      // Build payload using ids exactly as stored in cart (numeric or _id string)
+      //Payload using ids exactly as stored in cart (numeric or _id string)
       const lessonIDs = this.cart.map(it => ({ lessonId: isNaN(Number(it.id)) ? it.id : Number(it.id), qty: Number(it.qty) }));
       const numberOfSpace = this.cart.reduce((s, it) => s + Number(it.qty), 0);
 
@@ -253,12 +244,12 @@ new Vue({
         })
         .then(postResult => {
           // After order saved, update each lesson's spaces on the server using PUT /lessons/:id
-          // We send updated fields; server accepts numeric id or _id
+        
           const putPromises = this.cart.map(cartItem => {
             const lesson = this.lessons.find(l => String(l.id) === String(cartItem.id));
             if (!lesson) return Promise.resolve();
 
-            // Prepare update body - include current lesson.spaces (already decremented client-side)
+            // Prepare update body - include current lesson.spaces
             const updateBody = {
               subject: lesson.subject,
               location: lesson.location,
@@ -267,7 +258,7 @@ new Vue({
               icon: lesson.icon
             };
 
-            // Build path using cartItem.id (if numeric, path will be /lessons/1; if _id string, path will be /lessons/<ObjectId>)
+            // Build path using cartItem.id 
             const putUrl = apiPath(`/lessons/${encodeURIComponent(cartItem.id)}`);
 
             return fetch(putUrl, {
@@ -300,7 +291,7 @@ new Vue({
           this.orderError = err.message || 'Error submitting order';
         })
         .finally(() => {
-          // after order flow completes (either success or error), re-fetch lessons from backend
+          // after order flow completes  re-fetch lessons from backend
           // to ensure spaces reflect DB authoritative state (and persist across refresh).
           this.fetchLessonsFromBackend()
             .catch(e => {
@@ -343,7 +334,7 @@ new Vue({
 
   mounted() {
     // On load, fetch authoritative lessons from backend.
-    // If backend not reachable we keep embedded fallback lessons.
+    // If backend not reachable fallback on hardcoded lessons.
     this.fetchLessonsFromBackend();
   }
 });
